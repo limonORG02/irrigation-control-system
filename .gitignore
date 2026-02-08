@@ -1,6 +1,17 @@
-pycache/
-.pyc
+# Python
+__pycache__/
+*.pyc
+
+# Логи
+logs/
+*.log
+
+# Базы данных
+data/*.db
+
+# IDE
 .idea/
 .vscode/
+
+# Environment
 .env
-data/.db
