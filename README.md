@@ -35,6 +35,11 @@ irrigation-control-system/
 ├── data/
 │   └── irrigation.db
 │
+├── scripts/
+│   └── windows/
+│       ├── install_web.ps1
+│       └── run_web.bat
+│
 ├── README.md
 ├── .gitignore
 └── requirements.txt
@@ -64,6 +69,22 @@ python src/web/app.py
 
 Откройте в браузере: http://localhost:5000
 
+## Запуск web-интерфейса (Windows)
+1. Откройте PowerShell в корне проекта.
+2. Запустите установочный скрипт:
+```powershell
+scripts\\windows\\install_web.ps1
+```
+3. Для запуска web-интерфейса используйте:
+```powershell
+scripts\\windows\\run_web.bat
+```
+
+Если скрипт PowerShell блокируется политикой безопасности, выполните:
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
 ## Измененные и добавленные файлы
-- обновлены: `src/config.py`, `src/main.py`, `src/services/zone_service.py`, `README.md`
-- добавлены: `src/web/app.py`, `src/web/templates/index.html`, `requirements.txt`
+- обновлены: `src/config.py`, `src/main.py`, `src/services/zone_service.py`, `src/web/templates/index.html`, `README.md`
+- добавлены: `src/web/app.py`, `requirements.txt`, `scripts/windows/install_web.ps1`, `scripts/windows/run_web.bat`

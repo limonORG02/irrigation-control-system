@@ -5,74 +5,146 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Мониторинг полива</title>
   <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7fafc;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7c93;
+      --border: #e1e8f0;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      --ok: #2f855a;
+      --warn: #c05621;
+      --error: #c53030;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 24px;
-      color: #1f2933;
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
     }
-    h1 {
-      margin-bottom: 12px;
+
+    header {
+      padding: 28px 24px 8px;
     }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    header p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    main {
+      padding: 16px 24px 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
     table {
-      border-collapse: collapse;
       width: 100%;
-      max-width: 920px;
+      border-collapse: collapse;
     }
+
     th, td {
-      border: 1px solid #d9e2ec;
-      padding: 10px 12px;
       text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
     }
+
     th {
-      background: #f5f7fa;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
     }
-    .status-ok {
-      color: #2f855a;
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
       font-weight: 600;
+      font-size: 14px;
+      background: rgba(47, 133, 90, 0.12);
+      color: var(--ok);
     }
+
     .status-warn {
-      color: #c05621;
-      font-weight: 600;
+      background: rgba(192, 86, 33, 0.12);
+      color: var(--warn);
     }
+
     .status-error {
-      color: #c53030;
-      font-weight: 600;
+      background: rgba(197, 48, 48, 0.12);
+      color: var(--error);
+    }
+
+    .muted {
+      color: var(--muted);
     }
   </style>
 </head>
 <body>
-  <h1>Зоны полива</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Зона</th>
-        <th>Тип растений</th>
-        <th>Средняя влажность, %</th>
-        <th>Статус</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for zone in zones %}
-      <tr>
-        <td>{{ zone.name }}</td>
-        <td>{{ zone.plant_type }}</td>
-        <td>
-          {% if zone.avg_moisture is not none %}
-            {{ "%.1f"|format(zone.avg_moisture) }}
-          {% else %}
-            нет данных
-          {% endif %}
-        </td>
-        {% set status_class = "status-ok" %}
-        {% if zone.status in ["Требуется полив", "Переувлажнение"] %}
-          {% set status_class = "status-warn" %}
-        {% elif zone.status in ["Ошибка данных", "Нет нормативов"] %}
-          {% set status_class = "status-error" %}
-        {% endif %}
-        <td class="{{ status_class }}">{{ zone.status }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <header>
+    <h1>Зоны полива</h1>
+    <p>Актуальные показатели влажности и статус по каждой зоне.</p>
+  </header>
+  <main>
+    <section class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Зона</th>
+            <th>Тип растений</th>
+            <th>Средняя влажность, %</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for zone in zones %}
+          <tr>
+            <td>{{ zone.name }}</td>
+            <td class="muted">{{ zone.plant_type }}</td>
+            <td>
+              {% if zone.avg_moisture is not none %}
+                {{ "%.1f"|format(zone.avg_moisture) }}
+              {% else %}
+                нет данных
+              {% endif %}
+            </td>
+            {% set status_class = "status-pill" %}
+            {% if zone.status in ["Требуется полив", "Переувлажнение"] %}
+              {% set status_class = "status-pill status-warn" %}
+            {% elif zone.status in ["Ошибка данных", "Нет нормативов"] %}
+              {% set status_class = "status-pill status-error" %}
+            {% endif %}
+            <td><span class="{{ status_class }}">{{ zone.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
 </body>
 </html>
