@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мониторинг полива</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7fafc;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7c93;
+      --border: #e1e8f0;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      --ok: #2f855a;
+      --warn: #c05621;
+      --error: #c53030;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 28px 24px 8px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    header p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    main {
+      padding: 16px 24px 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 14px;
+      background: rgba(47, 133, 90, 0.12);
+      color: var(--ok);
+    }
+
+    .status-warn {
+      background: rgba(192, 86, 33, 0.12);
+      color: var(--warn);
+    }
+
+    .status-error {
+      background: rgba(197, 48, 48, 0.12);
+      color: var(--error);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Зоны полива</h1>
+    <p>Актуальные показатели влажности и статус по каждой зоне.</p>
+  </header>
+  <main>
+    <section class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Зона</th>
+            <th>Тип растений</th>
+            <th>Средняя влажность, %</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for zone in zones %}
+          <tr>
+            <td>{{ zone.name }}</td>
+            <td class="muted">{{ zone.plant_type }}</td>
+            <td>
+              {% if zone.avg_moisture is not none %}
+                {{ "%.1f"|format(zone.avg_moisture) }}
+              {% else %}
+                нет данных
+              {% endif %}
+            </td>
+            {% set status_class = "status-pill" %}
+            {% if zone.status in ["Требуется полив", "Переувлажнение"] %}
+              {% set status_class = "status-pill status-warn" %}
+            {% elif zone.status in ["Ошибка данных", "Нет нормативов"] %}
+              {% set status_class = "status-pill status-error" %}
+            {% endif %}
+            <td><span class="{{ status_class }}">{{ zone.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
