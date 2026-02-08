@@ -9,7 +9,7 @@ def main():
     init_db()
     zones = get_zones()
 
-    for zone_id, plant_type in zones:
+    for zone_id, _name, plant_type in zones:
         sensors_data = get_sensors_by_zone(zone_id)
         norms = get_norms(plant_type)
 

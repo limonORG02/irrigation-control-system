@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мониторинг полива</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 24px;
+      color: #1f2933;
+    }
+    h1 {
+      margin-bottom: 12px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 920px;
+    }
+    th, td {
+      border: 1px solid #d9e2ec;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th {
+      background: #f5f7fa;
+    }
+    .status-ok {
+      color: #2f855a;
+      font-weight: 600;
+    }
+    .status-warn {
+      color: #c05621;
+      font-weight: 600;
+    }
+    .status-error {
+      color: #c53030;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <h1>Зоны полива</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Зона</th>
+        <th>Тип растений</th>
+        <th>Средняя влажность, %</th>
+        <th>Статус</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for zone in zones %}
+      <tr>
+        <td>{{ zone.name }}</td>
+        <td>{{ zone.plant_type }}</td>
+        <td>
+          {% if zone.avg_moisture is not none %}
+            {{ "%.1f"|format(zone.avg_moisture) }}
+          {% else %}
+            нет данных
+          {% endif %}
+        </td>
+        {% set status_class = "status-ok" %}
+        {% if zone.status in ["Требуется полив", "Переувлажнение"] %}
+          {% set status_class = "status-warn" %}
+        {% elif zone.status in ["Ошибка данных", "Нет нормативов"] %}
+          {% set status_class = "status-error" %}
+        {% endif %}
+        <td class="{{ status_class }}">{{ zone.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

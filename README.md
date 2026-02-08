@@ -5,11 +5,12 @@
 
 ## Структура проекта
 ```
-irrigation-monitoring-system/
+irrigation-control-system/
 │
 ├── src/
 │   ├── main.py
 │   ├── config.py
+│   ├── init_demo_data.py
 │
 │   ├── database/
 │   │   ├── db.py
@@ -23,15 +24,16 @@ irrigation-monitoring-system/
 │   ├── analysis/
 │   │   └── decision_engine.py
 │
-│   └── utils/
-│       └── logger.py
+│   ├── utils/
+│   │   └── logger.py
+│   │
+│   └── web/
+│       ├── app.py
+│       └── templates/
+│           └── index.html
 │
 ├── data/
 │   └── irrigation.db
-│
-├── docs/
-│   ├── architecture.md
-│   └── user_manual.md
 │
 ├── README.md
 ├── .gitignore
@@ -50,7 +52,18 @@ irrigation-monitoring-system/
 ## Запуск
 ```bash
 pip install -r requirements.txt
-cd src
-python main.py
+python src/main.py
 ```
 
+## Запуск web-интерфейса
+```bash
+pip install -r requirements.txt
+python src/init_demo_data.py
+python src/web/app.py
+```
+
+Откройте в браузере: http://localhost:5000
+
+## Измененные и добавленные файлы
+- обновлены: `src/config.py`, `src/main.py`, `src/services/zone_service.py`, `README.md`
+- добавлены: `src/web/app.py`, `src/web/templates/index.html`, `requirements.txt`
