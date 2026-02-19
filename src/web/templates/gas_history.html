@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}История газа зоны{% endblock %}
+
+{% block content %}
+<header>
+  <h1>История газа</h1>
+  {% if history.zone_name %}
+  <p>Зона: {{ history.zone_name }}</p>
+  {% else %}
+  <p>Зона не найдена.</p>
+  {% endif %}
+</header>
+<main>
+  <section class="card">
+    {% if history.labels %}
+    <canvas id="gasChart" height="100"></canvas>
+    {% else %}
+    <p class="muted">Для этой зоны пока нет газовых измерений.</p>
+    {% endif %}
+
+    <p style="margin-top: 16px;"><a href="{{ url_for('index') }}">← К сводке зон</a></p>
+  </section>
+</main>
+
+{% if history.labels %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const gasCtx = document.getElementById('gasChart');
+  const gasChart = new Chart(gasCtx, {
+    type: 'line',
+    data: {
+      labels: {{ history.labels | tojson }},
+      datasets: [{
+        label: 'Газ, ppm',
+        data: {{ history.values | tojson }},
+        borderColor: '#c53030',
+        backgroundColor: 'rgba(197, 48, 48, 0.15)',
+        fill: true,
+        tension: 0.25
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          title: { display: true, text: 'Время' }
+        },
+        y: {
+          title: { display: true, text: 'ppm газа' },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+{% endif %}
+{% endblock %}

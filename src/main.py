@@ -7,6 +7,7 @@ from utils.logger import log
 
 
 def main():
+    """Run CLI analysis for all zones."""
     init_db()
     zones = get_zones()
 
@@ -23,6 +24,7 @@ def main():
         log(
             f"Зона {zone_id}: {result['status']} (влажность: {result['moisture_status']}, газ: {result['gas_status']})"
         )
+        log(f"Зона {zone_id}: {result['irrigation_reason']}")
 
 
 if __name__ == "__main__":
