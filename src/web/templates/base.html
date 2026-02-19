@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Мониторинг полива{% endblock %}</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7fafc;
+      --card: #ffffff;
+      --text: #1f2933;
+      --muted: #6b7c93;
+      --border: #e1e8f0;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      --ok: #2f855a;
+      --warn: #c05621;
+      --error: #c53030;
+      --danger: #c53030;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .gas-alert-banner {
+      background: var(--danger);
+      color: #ffffff;
+      padding: 12px 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    header { padding: 28px 24px 8px; }
+    header h1 { margin: 0; font-size: 28px; font-weight: 700; }
+    header p { margin: 6px 0 0; color: var(--muted); }
+    main { padding: 16px 24px 32px; }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 14px;
+      background: rgba(47, 133, 90, 0.12);
+      color: var(--ok);
+    }
+
+    .status-warn { background: rgba(192, 86, 33, 0.12); color: var(--warn); }
+    .status-error { background: rgba(197, 48, 48, 0.12); color: var(--error); }
+    .muted { color: var(--muted); }
+    a { color: #2b6cb0; text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  {% if global_gas_alert %}
+  <div class="gas-alert-banner">⚠ ВНИМАНИЕ: Обнаружена вероятность утечки газа на территории!</div>
+  {% endif %}
+  {% block content %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Зоны полива{% endblock %}
+
+{% block content %}
+<header>
+  <h1>Зоны полива</h1>
+  <p>Актуальные показатели влажности и газовой безопасности по каждой зоне.</p>
+</header>
+<main>
+  <section class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Зона</th>
+          <th>Тип растений</th>
+          <th>Средняя влажность, %</th>
+          <th>Пик газа, ppm</th>
+          <th>Газовый статус</th>
+          <th>Общий статус</th>
+          <th>Газ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for zone in zones %}
+        <tr>
+          <td>{{ zone.name }}</td>
+          <td class="muted">{{ zone.plant_type }}</td>
+          <td>
+            {% if zone.avg_moisture is not none %}
+              {{ "%.1f"|format(zone.avg_moisture) }}
+            {% else %}
+              нет данных
+            {% endif %}
+          </td>
+          <td>
+            {% if zone.peak_gas is not none %}
+              {{ "%.0f"|format(zone.peak_gas) }}
+            {% else %}
+              нет датчика
+            {% endif %}
+          </td>
+          {% set gas_class = "status-pill" %}
+          {% if zone.gas_status in ["Есть вероятность запаха газа", "Высокая вероятность запаха газа"] %}
+            {% set gas_class = "status-pill status-warn" %}
+          {% endif %}
+          <td><span class="{{ gas_class }}">{{ zone.gas_status }}</span></td>
+
+          {% set status_class = "status-pill" %}
+          {% if zone.status in ["Требуется полив", "Переувлажнение", "Требуется полив + Газовая тревога", "Требуется полив + Проверить газ", "Норма + Проверить газ", "Переувлажнение + Проверить газ", "Норма + Газовая тревога", "Переувлажнение + Газовая тревога"] %}
+            {% set status_class = "status-pill status-warn" %}
+          {% elif zone.status in ["Ошибка данных", "Нет нормативов"] %}
+            {% set status_class = "status-pill status-error" %}
+          {% endif %}
+          <td><span class="{{ status_class }}">{{ zone.status }}</span></td>
+          <td>
+            {% if zone.has_gas_sensor %}
+            <a href="{{ url_for('gas_history', zone_id=zone.id) }}">История газа</a>
+            {% else %}
+            <span class="muted">недоступно</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</main>
+{% endblock %}
