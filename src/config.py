@@ -1,1 +1,1 @@
-DB_PATH = "../data/irrigation.db"
+DB_PATH = "data/irrigation.db"

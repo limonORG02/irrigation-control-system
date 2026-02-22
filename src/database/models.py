@@ -17,6 +17,8 @@ def init_db():
     CREATE TABLE IF NOT EXISTS sensors (
         id INTEGER PRIMARY KEY,
         zone_id INTEGER,
+        type TEXT DEFAULT 'moisture',
+        active INTEGER DEFAULT 1,
         FOREIGN KEY(zone_id) REFERENCES zones(id)
     )
     """)
@@ -37,6 +39,28 @@ def init_db():
         max_moisture REAL
     )
     """)
+
+    # Table for gas/alarm events
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS gas_events (
+        id INTEGER PRIMARY KEY,
+        zone_id INTEGER,
+        level REAL,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        acknowledged INTEGER DEFAULT 0,
+        FOREIGN KEY(zone_id) REFERENCES zones(id)
+    )
+    """)
+
+    # Ensure newer columns exist if DB was created with older schema
+    try:
+        cur.execute("ALTER TABLE sensors ADD COLUMN type TEXT DEFAULT 'moisture'")
+    except Exception:
+        pass
+    try:
+        cur.execute("ALTER TABLE sensors ADD COLUMN active INTEGER DEFAULT 1")
+    except Exception:
+        pass
 
     conn.commit()
     conn.close()

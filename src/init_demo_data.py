@@ -11,10 +11,10 @@ def init_demo_data():
     cur.execute("INSERT OR IGNORE INTO zones VALUES (2, 'Клумба', 25, 'flowers')")
 
     # Датчики
-    cur.execute("INSERT OR IGNORE INTO sensors VALUES (1, 1)")
-    cur.execute("INSERT OR IGNORE INTO sensors VALUES (2, 1)")
-    cur.execute("INSERT OR IGNORE INTO sensors VALUES (3, 2)")
-    cur.execute("INSERT OR IGNORE INTO sensors VALUES (4, 2)")
+    cur.execute("INSERT OR IGNORE INTO sensors (id, zone_id, type, active) VALUES (1, 1, 'moisture', 1)")
+    cur.execute("INSERT OR IGNORE INTO sensors (id, zone_id, type, active) VALUES (2, 1, 'moisture', 1)")
+    cur.execute("INSERT OR IGNORE INTO sensors (id, zone_id, type, active) VALUES (3, 2, 'moisture', 1)")
+    cur.execute("INSERT OR IGNORE INTO sensors (id, zone_id, type, active) VALUES (4, 2, 'moisture', 1)")
 
     # Нормативы влажности
     cur.execute("""
